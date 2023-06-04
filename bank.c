@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#define RESET 10000000
 FILE *file;
 void balance_output(int);
 void balance_stored(int, char *);
@@ -25,6 +26,7 @@ int main() {
     // printf("Enter your balance: ");
     // scanf("%d", &balance);
     
+ // looking for balance variable in balance.txt file
  file = fopen("balance.txt" , "r"); 
  while ( fgets (data_string, 225, file) != NULL ) {
         puts(data_string);
@@ -36,8 +38,18 @@ int main() {
  fclose(file);
 
 
- return 0;
+ if (balance == 0) {
+    printf("Are you a new member of our bank?\n");
+    printf("Yes - 0, No - 1\n");
+    scanf("%d", &command_number);
+    if (command_number == 1) {
+        printf("We are sorry for this terrible mistake. You are just poor\n");
+    }
+ }
 
+command_number = RESET;
+
+printf("reset: %d\n", command_number);
 
 while (c) {
     printf("1-deposit \t 2-withdraw \t 3-leave \t 4 - profile \n");
@@ -56,23 +68,35 @@ while (c) {
     } else if ( command_number == 2 ) {
         printf("Enter withdraw amount: ");
         scanf("%d", &withdraw_amount);
-        balance = balance - withdraw_amount;
-        balance_stored(balance, data_string);
-        balance_output(balance); 
+        if (withdraw_amount > balance) {
+            printf("No enough funds to withdraw\n");
+        } else {
+            balance = balance - withdraw_amount;
+            balance_stored(balance, data_string);
+            balance_output(balance); 
+        } 
     } else if ( command_number == 4 ) {
         printf("Enter password \n");
         scanf("%d", &password);
         profile_password(password, data_string);
     }
 
+    command_number = RESET;
+
     
-    printf("Back to main menu-? \n");
+    printf(" MAINE MENU - 3 \n");
+    printf(" EXIT TERMINAL - 4\n");
     scanf("%d", &command_number);
 
-    if ( command_number == 1 || command_number == 2 || command_number == 4 ) {
+    if ( command_number == 3 ) {
         continue;
-    } else {
+    } else if (command_number == 4) {
         c = false;
+    } else {
+        while (command_number != 3 || command_number != 4){
+            printf("Enter valid command below");
+            scanf("%d", &command_number);
+        }
     }
 }
 // ############# FILE READER ###############
@@ -96,7 +120,7 @@ void balance_output(int balance) {
 
 // importing data into the balance.txt file
 void balance_stored(int balance, char *data_string) {
-    file = fopen("balance.txt", "a");
+    file = fopen("balance.txt", "w");
     sprintf(data_string, "%d", balance);
     fputs(data_string, file);
     fclose(file);
