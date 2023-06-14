@@ -9,15 +9,15 @@ void profile_password(int, char *);
 
 
 int main() {
+    int c = 0;
     int balance = 0;
     int password = 0;
     int deposit_amount = 0;
     int withdraw_amount = 0;
     int command_number = 0;
     bool c = true;
-    int count_main = 1;
-    int count_read = 0;
     char data_string[256];
+    
 
     // file = fopen("balance.txt", "w");
     // fclose(file);
@@ -27,14 +27,11 @@ int main() {
     // scanf("%d", &balance);
     
  // looking for balance variable in balance.txt file
- file = fopen("balance.txt" , "r"); 
- while ( fgets (data_string, 225, file) != NULL ) {
-        puts(data_string);
-        for (int i = 0; data_string[i] != '\0'; i++) {
-            balance = balance * 10 + (data_string[i] - 48);
-        }
+ file = fopen("statistics.txt" , "r"); 
+ while ( fgets (data_string, 225, file) != NULL ) {   
+            printf("%s", data_string);
  } 
- printf("Your balance: %d\n", balance);
+
  fclose(file);
 
 
@@ -60,6 +57,7 @@ while (c) {
     }
 
     if ( command_number == 1 ) {
+        c = 1;
         printf("Enter deposit amount: ");
         scanf("%d", &deposit_amount);
         balance = deposit_amount + balance;
@@ -71,14 +69,20 @@ while (c) {
         if (withdraw_amount > balance) {
             printf("No enough funds to withdraw\n");
         } else {
+            c = 2;
             balance = balance - withdraw_amount;
             balance_stored(balance, data_string);
             balance_output(balance); 
         } 
     } else if ( command_number == 4 ) {
-        printf("Enter password \n");
-        scanf("%d", &password);
-        profile_password(password, data_string);
+        if ((file = fopen("profile.txt", "r")) == NULL) {
+            printf("Create profile file\n");
+            file = fopen("profile.txt", "w");
+            scanf("%s", &data_string);
+            fputs(data_string, file);
+            fclose(file);
+        }
+
     }
 
     command_number = RESET;
@@ -127,10 +131,41 @@ void balance_stored(int balance, char *data_string) {
 }
 
 // importing data into the pin.txt file
-void profile_password(int password, char *data_string) {
-    file = fopen("pin.txt", "a");
-    sprintf(data_string, "%d", password);
-    fputs(data_string, file);
-    fclose(file);
+void log(int c, int transaction, char *data_string) {
+    if (transaction != 0) {
+        if ( c == 1 ) {
+            file = fopen("statistics.txt", "a");
+            sprintf(data_string, "%d", transaction);
+            fputc('+', file);
+            fputs(data_string, file);
+            fputs('\n', file);
+            fclose(file);
+        } else if ( c == 2 ) {
+            file = fopen("statistics.txt", "a");
+            sprintf(data_string, "%d", transaction);
+            fputc('-', file);
+            fputs(data_string, file);
+            fputs('\n', file);
+            fclose(file);
+        }
+    }
+    
 }
 
+void profile_username(char *data_string) {
+    if ((file = fopen("username.txt", "r")) == NULL) {
+        printf("You need to create profile\n");
+        printf("Enter your username: ");
+        file = fopen("username.txt", "a");
+        scanf("%s", &data_string);
+        fputs(data_string, file);
+        fclose(file);
+        printf("Create your passcode");
+        file = fopen("passcode.txt", "a");
+        scanf("%s", &data_string);
+        fputs(data_string, file);
+        fclose(file);
+    } 
+}
+
+fgsdgsdggs
