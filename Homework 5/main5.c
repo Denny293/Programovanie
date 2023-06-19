@@ -11,7 +11,7 @@ int main() {
 }
 
 unsigned long sum_squared(const int line) {
-    int a = 1;
+    unsigned long a = 1;
     for (int i = 0; i < line; i++) {
         a = a * 2;
     }
