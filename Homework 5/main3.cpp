@@ -41,7 +41,7 @@ int main() {
 
     std::cout << "Student ses: " << std::endl;
     for (int i = 0; i < 5; i++) {
-        std::cout << "Student from group " << s[i].group << "ses" << ": " << std::endl;
+        std::cout << "Student from the " << s[i].group << " group, ses" << ": " << std::endl;
         for (int j = 0; j < 5; j++) {
             std::cin >> s[i].ses[j];
         }
