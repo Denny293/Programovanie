@@ -312,7 +312,6 @@ int get_max_number_of_cars(struct parkingg data_array[], int repetitions) {
     int peak = 0;
     int time1 = 0;
     int time2 = 0;
-    std::map<int, int> time;
     std::map<int, int> time_m;
 
     for (int i = 0; i < 1440; i++) {
