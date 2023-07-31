@@ -55,7 +55,7 @@ int main() {
     // std::cout << calculate_average_stays(data_array, repetitions) << std::endl;
     // std::cout << get_most_common_region(data_array, repetitions) << std::endl;
     // std::cout << get_busiest_hour (data_array, repetitions) << std::endl;
-    std::cout << get_max_number_of_cars(data_array, repetitions) << std::endl;
+    // std::cout << get_max_number_of_cars(data_array, repetitions) << std::endl;
     
     return 0;
 }
@@ -289,7 +289,7 @@ int get_busiest_hour (struct parkingg data_array[], int repetitions) {
     for (int i = 0; i < 25; i++) {
         time[i] = 0;
         for (int j = 0; j < repetitions; j++) {
-            if (data_array[j].S_H <= i && i <= data_array[j].F_H) {
+            if (data_array[j].S_H <= i && i < data_array[j].F_H) {
                 time[i]++;
             } 
         }
@@ -307,47 +307,39 @@ int get_busiest_hour (struct parkingg data_array[], int repetitions) {
 }
 
 int get_max_number_of_cars(struct parkingg data_array[], int repetitions) {
-    int i = 0;
+
     int number = 0;
-    int peak1 = 0;
     int peak = 0;
+    int time1 = 0;
+    int time2 = 0;
     std::map<int, int> time;
     std::map<int, int> time_m;
-    for (int i = 0; i < 25; i++) {
-        time[i] = 0;
-        for (int j = 0; j < repetitions; j++) {
-            if (data_array[j].S_H <= i && i <= data_array[j].F_H) {
-                time[i]++;
-            } 
-        }
-        std::cout << i << "\t" << time[i] << std::endl;
-    }
 
-    for (const auto& timee : time) {
-        if (timee.second > number) {
-            number = timee.second;
-            peak = timee.first;
-        }
-    }
-
-    for (int i = 0; i < 60; i++) {
+    for (int i = 0; i < 1440; i++) {
         time_m[i] = 0;
-        for (int j = 0; j < repetitions; j++) {
-            if (data_array[j].S_H <= peak && peak < data_array[j].F_H) {
-                if (i <= data_array[j].F_M) {
-                    time_m[i]++;
-                }
-            } 
-        }
-        std::cout << i << "\t" << time[i] << std::endl;
     }
 
-    for (const auto& timey : time_m) {
-        if (timey.second > number) {
-            number = timey.second;
-            peak1 = timey.first;
+    for (int i = 0; i < repetitions; i++) {
+        time1 = (data_array[i].S_H * 60) + data_array[i].S_M;
+        time2 = (data_array[i].F_H * 60) + data_array[i].F_M;
+        for (time1; time1 < time2; time1++) {
+            time_m[time1]++;
         }
     }
+
+    for (const auto& ti : time_m) {
+        if (ti.second > number) {
+            number = ti.second;
+            peak = ti.first;
+        }
+    }
+
+    for (const auto& ti : time_m) {
+        std::cout << ti.first / 60 << ":" << ti.first % 60 << "--" << ti.second << std::endl;
+    }
+
+
 
     return number;
 }
+
