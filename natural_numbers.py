@@ -1,4 +1,4 @@
-test =int(input("Number: "))
+test = int(input("Number: "))
 a = 0
 for i in range(1,test):
     i = int(i)
